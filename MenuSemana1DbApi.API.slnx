@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Aplicacion/Aplicacion.csproj" Id="f67fa640-fbe3-49ab-9b28-82449eb90179" />
+  <Project Path="DOMINIO/DOMINIO.csproj" Id="5dcd2614-2f4b-4792-ad08-941340e23b97" />
+  <Project Path="Infraestructura/Infraestructura.csproj" Id="44bf3442-244a-4ec3-8706-73403e586984" />
+  <Project Path="MenuSemana1DbApi.API/MenuSemana1DbApi.API.csproj" />
+</Solution>
