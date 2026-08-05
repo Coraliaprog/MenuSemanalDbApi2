@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DOMINIO\DOMINIO.csproj" />
-    <ProjectReference Include="..\Infraestructura\Infraestructura.csproj" />
+    <ProjectReference Include="..\MenuSemanal.Domain\MenuSemanal.Domain.csproj" />
+    <ProjectReference Include="..\MenuSemanal.Infrastructure\MenuSemanal.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
