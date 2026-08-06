@@ -1,0 +1,347 @@
+﻿@page "/comidas"
+@using MenuSemanal.Frontend.Models
+@using MenuSemanal.Frontend.Services
+@inject ComidaService ComidaService
+@inject MenuSemanalService MenuService
+
+<PageTitle>Comidas</PageTitle>
+
+<div class="page-header">
+    <div>
+        <h1>Comidas</h1>
+        <p>
+            Registra las comidas y relaciónalas con un menú semanal.
+        </p>
+    </div>
+
+    <button class="btn btn-success" @onclick="Nuevo">
+        + Nueva comida
+    </button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="alert @claseMensaje">
+        @mensaje
+    </div>
+}
+
+<div class="row g-4">
+
+    <div class="col-lg-4">
+
+        <div class="card module-card">
+
+            <div class="card-body">
+
+                <h4>
+                    @(modelo.Id == 0
+                        ? "Registrar comida"
+                        : "Editar comida")
+                </h4>
+
+                <EditForm Model="modelo"
+                          OnValidSubmit="GuardarAsync">
+
+                    <DataAnnotationsValidator />
+
+                    <ValidationSummary class="text-danger" />
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Nombre
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="modelo.Nombre" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Descripción
+                        </label>
+
+                        <InputTextArea class="form-control"
+                                       rows="3"
+                                       @bind-Value="modelo.Descripcion" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Menú semanal
+                        </label>
+
+                        <InputSelect class="form-select"
+                                     @bind-Value="modelo.MenuSemanalId">
+
+                            <option value="0">
+                                Seleccione un menú
+                            </option>
+
+                            @foreach (var menu in menus)
+                            {
+                                <option value="@menu.Id">
+                                    @menu.Nombre
+                                </option>
+                            }
+
+                        </InputSelect>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <button class="btn btn-success"
+                                type="submit"
+                                disabled="@guardando">
+
+                            @(guardando
+                                ? "Guardando..."
+                                : "Guardar")
+
+                        </button>
+
+                        <button class="btn btn-outline-secondary"
+                                type="button"
+                                @onclick="Nuevo">
+
+                            Limpiar
+
+                        </button>
+
+                    </div>
+
+                </EditForm>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-8">
+
+        <div class="card module-card">
+
+            <div class="card-body">
+
+                @if (cargando)
+                {
+                    <p>Cargando comidas...</p>
+                }
+                else if (comidas.Count == 0)
+                {
+                    <div class="empty-state">
+                        No hay comidas registradas todavía.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Menú</th>
+                                    <th class="text-end">
+                                        Acciones
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var comida in comidas)
+                                {
+                                    <tr>
+
+                                        <td>
+                                            <strong>
+                                                @comida.Nombre
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            @comida.Descripcion
+                                        </td>
+
+                                        <td>
+                                            @NombreMenu(
+                                                comida.MenuSemanalId)
+                                        </td>
+
+                                        <td class="text-end">
+
+                                            <button class="btn btn-sm btn-outline-primary me-2"
+                                                    @onclick="() => Editar(comida)">
+
+                                                Editar
+
+                                            </button>
+
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    @onclick="() => EliminarAsync(comida.Id)">
+
+                                                Eliminar
+
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+
+    private List<Comida> comidas = [];
+
+    private List<MenuSemanalModel> menus = [];
+
+    private Comida modelo = new();
+
+    private bool cargando = true;
+
+    private bool guardando;
+
+    private string mensaje = string.Empty;
+
+    private string claseMensaje = "alert-success";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            menus =
+                await MenuService.ObtenerTodosAsync();
+
+            comidas =
+                await ComidaService.ObtenerTodasAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task CargarAsync()
+    {
+        comidas =
+            await ComidaService.ObtenerTodasAsync();
+    }
+
+    private async Task GuardarAsync()
+    {
+        try
+        {
+            guardando = true;
+
+            if (modelo.Id == 0)
+            {
+                await ComidaService.CrearAsync(modelo);
+            }
+            else
+            {
+                await ComidaService.ActualizarAsync(modelo);
+            }
+
+            mensaje =
+                "Comida guardada correctamente.";
+
+            claseMensaje =
+                "alert-success";
+
+            Nuevo();
+
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+        finally
+        {
+            guardando = false;
+        }
+    }
+
+    private void Editar(Comida comida)
+    {
+        modelo = new Comida
+        {
+            Id = comida.Id,
+            Nombre = comida.Nombre,
+            Descripcion = comida.Descripcion,
+            MenuSemanalId = comida.MenuSemanalId
+        };
+    }
+
+    private async Task EliminarAsync(int id)
+    {
+        try
+        {
+            await ComidaService.EliminarAsync(id);
+
+            mensaje =
+                "Comida eliminada correctamente.";
+
+            claseMensaje =
+                "alert-success";
+
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+    }
+
+    private string NombreMenu(int id)
+    {
+        return menus
+            .FirstOrDefault(x => x.Id == id)?
+            .Nombre ?? $"Menú #{id}";
+    }
+
+    private void Nuevo()
+    {
+        modelo = new Comida();
+    }
+
+    private void MostrarError(Exception ex)
+    {
+        mensaje =
+            $"No se pudo completar la operación. {ex.Message}";
+
+        claseMensaje =
+            "alert-danger";
+    }
+}

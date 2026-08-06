@@ -1,0 +1,407 @@
+﻿@page "/ingredientes"
+@rendermode InteractiveServer
+
+@using MenuSemanal.Frontend.Models
+@using MenuSemanal.Frontend.Services
+
+@inject IngredienteService IngredienteService
+@inject ComidaService ComidaService
+
+<PageTitle>Ingredientes</PageTitle>
+
+<div class="page-header">
+    <div>
+        <h1>Ingredientes</h1>
+
+        <p>
+            Registra los ingredientes y relaciónalos con una comida.
+        </p>
+    </div>
+
+    <button class="btn btn-success"
+            type="button"
+            @onclick="Nuevo">
+
+        + Nuevo ingrediente
+
+    </button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="alert @claseMensaje">
+        @mensaje
+    </div>
+}
+
+<div class="row g-4">
+
+    <div class="col-lg-4">
+
+        <div class="card module-card">
+
+            <div class="card-body">
+
+                <h4>
+                    @(modelo.Id == 0
+                        ? "Registrar ingrediente"
+                        : "Editar ingrediente")
+                </h4>
+
+                <EditForm Model="modelo"
+                          OnValidSubmit="GuardarAsync">
+
+                    <DataAnnotationsValidator />
+
+                    <ValidationSummary class="text-danger" />
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Nombre
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="modelo.Nombre" />
+
+                        <ValidationMessage For="@(() => modelo.Nombre)" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Cantidad
+                        </label>
+
+                        <InputNumber class="form-control"
+                                     @bind-Value="modelo.Cantidad" />
+
+                        <ValidationMessage For="@(() => modelo.Cantidad)" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Unidad de medida
+                        </label>
+
+                        <InputSelect class="form-select"
+                                     @bind-Value="modelo.UnidadMedida">
+
+                            <option value="">
+                                Seleccione una unidad
+                            </option>
+
+                            <option value="Unidad">Unidad</option>
+                            <option value="Gramos">Gramos</option>
+                            <option value="Kilogramos">Kilogramos</option>
+                            <option value="Mililitros">Mililitros</option>
+                            <option value="Litros">Litros</option>
+                            <option value="Tazas">Tazas</option>
+                            <option value="Cucharadas">Cucharadas</option>
+
+                        </InputSelect>
+
+                        <ValidationMessage For="@(() => modelo.UnidadMedida)" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Comida
+                        </label>
+
+                        <InputSelect class="form-select"
+                                     @bind-Value="modelo.ComidaId">
+
+                            <option value="0">
+                                Seleccione una comida
+                            </option>
+
+                            @foreach (var comida in comidas)
+                            {
+                                <option value="@comida.Id">
+                                    @comida.Nombre
+                                </option>
+                            }
+
+                        </InputSelect>
+
+                        <ValidationMessage For="@(() => modelo.ComidaId)" />
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <button class="btn btn-success"
+                                type="submit"
+                                disabled="@guardando">
+
+                            @(guardando
+                                ? "Guardando..."
+                                : "Guardar")
+
+                        </button>
+
+                        <button class="btn btn-outline-secondary"
+                                type="button"
+                                @onclick="Nuevo">
+
+                            Limpiar
+
+                        </button>
+
+                    </div>
+
+                </EditForm>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-8">
+
+        <div class="card module-card">
+
+            <div class="card-body">
+
+                @if (cargando)
+                {
+                    <p>Cargando ingredientes...</p>
+                }
+                else if (ingredientes.Count == 0)
+                {
+                    <div class="empty-state">
+                        No hay ingredientes registrados todavía.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Cantidad</th>
+                                    <th>Unidad</th>
+                                    <th>Comida</th>
+
+                                    <th class="text-end">
+                                        Acciones
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var ingrediente in ingredientes)
+                                {
+                                    <tr>
+
+                                        <td>
+                                            <strong>
+                                                @ingrediente.Nombre
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            @ingrediente.Cantidad
+                                        </td>
+
+                                        <td>
+                                            @ingrediente.UnidadMedida
+                                        </td>
+
+                                        <td>
+                                            @NombreComida(ingrediente.ComidaId)
+                                        </td>
+
+                                        <td class="text-end">
+
+                                            <button class="btn btn-sm btn-outline-primary me-2"
+                                                    type="button"
+                                                    @onclick="() => Editar(ingrediente)">
+
+                                                Editar
+
+                                            </button>
+
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    type="button"
+                                                    @onclick="() => EliminarAsync(ingrediente.Id)">
+
+                                                Eliminar
+
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+
+    private List<Ingrediente> ingredientes = [];
+
+    private List<Comida> comidas = [];
+
+    private Ingrediente modelo = new();
+
+    private bool cargando = true;
+
+    private bool guardando;
+
+    private string mensaje = string.Empty;
+
+    private string claseMensaje = "alert-success";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            comidas =
+                await ComidaService.ObtenerTodasAsync();
+
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task CargarAsync()
+    {
+        ingredientes =
+            await IngredienteService.ObtenerTodosAsync();
+
+        ingredientes = ingredientes
+            .OrderBy(ingrediente => ingrediente.Nombre)
+            .ToList();
+    }
+
+    private async Task GuardarAsync()
+    {
+        try
+        {
+            guardando = true;
+            mensaje = string.Empty;
+
+            if (modelo.Id == 0)
+            {
+                await IngredienteService.CrearAsync(modelo);
+            }
+            else
+            {
+                await IngredienteService.ActualizarAsync(modelo);
+            }
+
+            mensaje =
+                "Ingrediente guardado correctamente.";
+
+            claseMensaje =
+                "alert-success";
+
+            Nuevo();
+
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+        finally
+        {
+            guardando = false;
+        }
+    }
+
+    private void Editar(Ingrediente ingrediente)
+    {
+        modelo = new Ingrediente
+        {
+            Id = ingrediente.Id,
+            Nombre = ingrediente.Nombre,
+            Cantidad = ingrediente.Cantidad,
+            UnidadMedida = ingrediente.UnidadMedida,
+            ComidaId = ingrediente.ComidaId
+        };
+
+        mensaje = string.Empty;
+    }
+
+    private async Task EliminarAsync(int id)
+    {
+        try
+        {
+            await IngredienteService.EliminarAsync(id);
+
+            mensaje =
+                "Ingrediente eliminado correctamente.";
+
+            claseMensaje =
+                "alert-success";
+
+            if (modelo.Id == id)
+            {
+                Nuevo();
+            }
+
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+    }
+
+    private string NombreComida(int comidaId)
+    {
+        return comidas
+            .FirstOrDefault(comida => comida.Id == comidaId)?
+            .Nombre ?? $"Comida #{comidaId}";
+    }
+
+    private void Nuevo()
+    {
+        modelo = new Ingrediente();
+        mensaje = string.Empty;
+    }
+
+    private void MostrarError(Exception ex)
+    {
+        mensaje =
+            $"No se pudo completar la operación. {ex.Message}";
+
+        claseMensaje =
+            "alert-danger";
+    }
+}

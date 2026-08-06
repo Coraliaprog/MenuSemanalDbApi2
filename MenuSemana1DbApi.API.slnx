@@ -1,6 +1,9 @@
 <Solution>
-  <Project Path="MenuSemanal.Application/MenuSemanal.Application.csproj" />
-  <Project Path="MenuSemanal.Domain/MenuSemanal.Domain.csproj" />
-  <Project Path="MenuSemanal.Infrastructure/MenuSemanal.Infrastructure.csproj" />
-  <Project Path="MenuSemanal.API/MenuSemanal.API.csproj" />
+  <Folder Name="/MenuSemanal/">
+    <Project Path="MenuSemanal.API/MenuSemanal.API.csproj" />
+    <Project Path="MenuSemanal.Application/MenuSemanal.Application.csproj" />
+    <Project Path="MenuSemanal.Domain/MenuSemanal.Domain.csproj" />
+    <Project Path="MenuSemanal.Infrastructure/MenuSemanal.Infrastructure.csproj" />
+  </Folder>
+  <Project Path="MenuSemanal.Frontend/MenuSemanal.Frontend.csproj" Id="c8e74ba6-f58f-456d-b478-30df9bd00d18" />
 </Solution>

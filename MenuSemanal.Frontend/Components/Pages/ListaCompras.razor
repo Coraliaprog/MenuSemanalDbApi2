@@ -1,0 +1,394 @@
+﻿@page "/lista-compras"
+@rendermode InteractiveServer
+
+@using MenuSemanal.Frontend.Models
+@using MenuSemanal.Frontend.Services
+
+@inject ListaCompraService ListaCompraService
+
+<PageTitle>Lista de Compras</PageTitle>
+
+<div class="page-header">
+
+    <div>
+
+        <h1>Lista de Compras</h1>
+
+        <p>
+            Administra los productos de la lista de compras.
+        </p>
+
+    </div>
+
+    <button class="btn btn-success"
+            type="button"
+            @onclick="Nuevo">
+
+        + Nuevo Producto
+
+    </button>
+
+</div>
+
+@if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="alert @claseMensaje">
+        @mensaje
+    </div>
+}
+
+<div class="row g-4">
+
+    <div class="col-lg-4">
+
+        <div class="card module-card">
+
+            <div class="card-body">
+
+                <h4>
+
+                    @(modelo.Id == 0
+                        ? "Registrar Producto"
+                        : "Editar Producto")
+
+                </h4>
+
+                <EditForm Model="modelo"
+                          OnValidSubmit="GuardarAsync">
+
+                    <DataAnnotationsValidator />
+
+                    <ValidationSummary class="text-danger" />
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Producto
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="modelo.Producto" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Cantidad
+                        </label>
+
+                        <InputNumber class="form-control"
+                                     @bind-Value="modelo.Cantidad" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Unidad de medida
+                        </label>
+
+                        <InputSelect class="form-select"
+                                     @bind-Value="modelo.UnidadMedida">
+
+                            <option value="">Seleccione</option>
+
+                            <option value="Unidad">Unidad</option>
+                            <option value="Gramos">Gramos</option>
+                            <option value="Kilogramos">Kilogramos</option>
+                            <option value="Mililitros">Mililitros</option>
+                            <option value="Litros">Litros</option>
+
+                        </InputSelect>
+
+                    </div>
+
+                    <div class="form-check mb-3">
+
+                        <InputCheckbox class="form-check-input"
+                                       @bind-Value="modelo.Comprado" />
+
+                        <label class="form-check-label">
+
+                            Comprado
+
+                        </label>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <button class="btn btn-success"
+                                type="submit"
+                                disabled="@guardando">
+
+                            @(guardando ? "Guardando..." : "Guardar")
+
+                        </button>
+
+                        <button class="btn btn-outline-secondary"
+                                type="button"
+                                @onclick="Nuevo">
+
+                            Limpiar
+
+                        </button>
+
+                    </div>
+
+                </EditForm>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="col-lg-8">
+
+        <div class="card module-card">
+
+            <div class="card-body">
+
+                @if (cargando)
+                {
+                    <p>Cargando productos...</p>
+                }
+                else if (productos.Count == 0)
+                {
+                    <div class="empty-state">
+
+                        No hay productos registrados.
+
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Producto</th>
+
+                                    <th>Cantidad</th>
+
+                                    <th>Unidad</th>
+
+                                    <th>Comprado</th>
+
+                                    <th class="text-end">
+
+                                        Acciones
+
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var producto in productos)
+                                {
+                                    <tr>
+
+                                        <td>
+
+                                            <strong>
+
+                                                @producto.Producto
+
+                                            </strong>
+
+                                        </td>
+
+                                        <td>
+
+                                            @producto.Cantidad
+
+                                        </td>
+
+                                        <td>
+
+                                            @producto.UnidadMedida
+
+                                        </td>
+
+                                        <td>
+
+                                            @(producto.Comprado ? "Sí" : "No")
+
+                                        </td>
+
+                                        <td class="text-end">
+
+                                            <button class="btn btn-sm btn-outline-primary me-2"
+                                                    type="button"
+                                                    @onclick="() => Editar(producto)">
+
+                                                Editar
+
+                                            </button>
+
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    type="button"
+                                                    @onclick="() => EliminarAsync(producto.Id)">
+
+                                                Eliminar
+
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@code {
+
+    private List<ListaCompra> productos = [];
+
+    private ListaCompra modelo = new();
+
+    private bool cargando = true;
+
+    private bool guardando;
+
+    private string mensaje = string.Empty;
+
+    private string claseMensaje = "alert-success";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task CargarAsync()
+    {
+        productos =
+            await ListaCompraService.ObtenerTodasAsync();
+
+        productos = productos
+            .OrderBy(x => x.Producto)
+            .ToList();
+    }
+
+    private async Task GuardarAsync()
+    {
+        try
+        {
+            guardando = true;
+
+            mensaje = string.Empty;
+
+            if (modelo.Id == 0)
+            {
+                await ListaCompraService.CrearAsync(modelo);
+            }
+            else
+            {
+                await ListaCompraService.ActualizarAsync(modelo);
+            }
+
+            mensaje =
+                "Producto guardado correctamente.";
+
+            claseMensaje =
+                "alert-success";
+
+            Nuevo();
+
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+        finally
+        {
+            guardando = false;
+        }
+    }
+
+    private void Editar(ListaCompra producto)
+    {
+        modelo = new ListaCompra
+        {
+            Id = producto.Id,
+            Producto = producto.Producto,
+            Cantidad = producto.Cantidad,
+            UnidadMedida = producto.UnidadMedida,
+            Comprado = producto.Comprado
+        };
+
+        mensaje = string.Empty;
+    }
+    private async Task EliminarAsync(int id)
+    {
+        try
+        {
+            await ListaCompraService.EliminarAsync(id);
+
+            mensaje =
+                "Producto eliminado correctamente.";
+
+            claseMensaje =
+                "alert-success";
+
+            if (modelo.Id == id)
+            {
+                Nuevo();
+            }
+
+            await CargarAsync();
+        }
+        catch (Exception ex)
+        {
+            MostrarError(ex);
+        }
+    }
+
+    private void Nuevo()
+    {
+        modelo = new ListaCompra();
+
+        mensaje = string.Empty;
+    }
+
+    private void MostrarError(Exception ex)
+    {
+        mensaje =
+            $"No se pudo completar la operación. {ex.Message}";
+
+        claseMensaje =
+            "alert-danger";
+    }
+
+}

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MenuSemanal.Application\MenuSemanal.Application.csproj" />
+    <ProjectReference Include="..\MenuSemanal.Infrastructure\MenuSemanal.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
