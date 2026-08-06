@@ -1,17 +1,19 @@
 ﻿using Dominio.Entidades;
 
-
 namespace Infraestructura.AccesoDatos.Interfaces
 {
     public interface IMenuSemanalRepository
     {
-        Task<IEnumerable<MenuSemanal>> ObtenerTodosAsync();
+        Task<IEnumerable<Dominio.Entidades.MenuSemanal>> ObtenerTodosAsync();
 
-        Task<MenuSemanal?> ObtenerPorIdAsync(int id);
+        Task<Dominio.Entidades.MenuSemanal?> ObtenerPorIdAsync(int id);
 
-        Task<MenuSemanal> CrearAsync(MenuSemanal menuSemanal);
+        Task<Dominio.Entidades.MenuSemanal> CrearAsync(
+            Dominio.Entidades.MenuSemanal menuSemanal);
 
-        Task<MenuSemanal?> ActualizarAsync(int id, MenuSemanal menuSemanal);
+        Task<Dominio.Entidades.MenuSemanal?> ActualizarAsync(
+            int id,
+            Dominio.Entidades.MenuSemanal menuSemanal);
 
         Task<bool> EliminarAsync(int id);
     }

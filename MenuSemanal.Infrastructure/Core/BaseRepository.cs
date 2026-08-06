@@ -1,5 +1,5 @@
-﻿using Dominio.Core;
-using Infraestructura.AccesoDatos.Contexto;
+﻿using Infraestructura.AccesoDatos.Contexto;
+using MenuSemanal.Domain.Repository.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructura.Core

@@ -1,4 +1,4 @@
-﻿using Dominio.Core;
+﻿using MenuSemanal.Domain.Repository.Core;
 
 namespace Dominio.Entidades
 {

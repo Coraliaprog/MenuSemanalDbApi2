@@ -18,7 +18,7 @@ namespace MenuSemana1DbApi.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MenuSemanal>>> Get()
+        public async Task<ActionResult<IEnumerable<Dominio.Entidades.MenuSemanal>>> Get()
         {
             var menusSemanales =
                 await _menuSemanalService.ObtenerTodosAsync();
@@ -27,7 +27,7 @@ namespace MenuSemana1DbApi.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MenuSemanal>> Get(int id)
+        public async Task<ActionResult<Dominio.Entidades.MenuSemanal>> Get(int id)
         {
             var menuSemanal =
                 await _menuSemanalService.ObtenerPorIdAsync(id);
@@ -41,10 +41,10 @@ namespace MenuSemana1DbApi.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MenuSemanal>> Post(
+        public async Task<ActionResult<Dominio.Entidades.MenuSemanal>> Post(
             CreateMenuSemanalDto dto)
         {
-            var menuSemanal = new MenuSemanal
+            var menuSemanal = new Dominio.Entidades.MenuSemanal
             {
                 Nombre = dto.Nombre,
                 FechaInicio = dto.FechaInicio,
@@ -60,11 +60,11 @@ namespace MenuSemana1DbApi.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<MenuSemanal>> Put(
+        public async Task<ActionResult<Dominio.Entidades.MenuSemanal>> Put(
             int id,
             UpdateMenuSemanalDto dto)
         {
-            var menuSemanal = new MenuSemanal
+            var menuSemanal = new Dominio.Entidades.MenuSemanal
             {
                 Nombre = dto.Nombre,
                 FechaInicio = dto.FechaInicio,

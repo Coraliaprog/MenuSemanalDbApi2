@@ -11,7 +11,7 @@ namespace Infraestructura.AccesoDatos.Contexto
         {
         }
 
-        public DbSet<MenuSemanal> MenusSemanales { get; set; }
+        public DbSet<Dominio.Entidades.MenuSemanal> MenusSemanales { get; set; }
 
         public DbSet<Comida> Comidas { get; set; }
 

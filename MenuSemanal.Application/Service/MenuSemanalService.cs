@@ -12,22 +12,25 @@ namespace Aplicacion.Service
             _menuSemanalRepository = menuSemanalRepository;
         }
 
-        public async Task<IEnumerable<MenuSemanal>> ObtenerTodosAsync()
+        public async Task<IEnumerable<Dominio.Entidades.MenuSemanal>> ObtenerTodosAsync()
         {
             return await _menuSemanalRepository.ObtenerTodosAsync();
         }
 
-        public async Task<MenuSemanal?> ObtenerPorIdAsync(int id)
+        public async Task<Dominio.Entidades.MenuSemanal?> ObtenerPorIdAsync(int id)
         {
             return await _menuSemanalRepository.ObtenerPorIdAsync(id);
         }
 
-        public async Task<MenuSemanal> CrearAsync(MenuSemanal menuSemanal)
+        public async Task<Dominio.Entidades.MenuSemanal> CrearAsync(
+            Dominio.Entidades.MenuSemanal menuSemanal)
         {
             return await _menuSemanalRepository.CrearAsync(menuSemanal);
         }
 
-        public async Task<MenuSemanal?> ActualizarAsync(int id, MenuSemanal menuSemanal)
+        public async Task<Dominio.Entidades.MenuSemanal?> ActualizarAsync(
+            int id,
+            Dominio.Entidades.MenuSemanal menuSemanal)
         {
             return await _menuSemanalRepository.ActualizarAsync(id, menuSemanal);
         }

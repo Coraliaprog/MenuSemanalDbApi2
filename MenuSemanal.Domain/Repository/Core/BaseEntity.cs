@@ -1,4 +1,4 @@
-﻿namespace Dominio.Core
+﻿namespace MenuSemanal.Domain.Repository.Core
 {
     public abstract class BaseEntity
     {
