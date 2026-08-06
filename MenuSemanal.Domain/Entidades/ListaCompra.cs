@@ -11,5 +11,21 @@ namespace Dominio.Entidades
         public string UnidadMedida { get; set; } = string.Empty;
 
         public bool Comprado { get; set; }
+
+        public ListaCompra()
+        {
+        }
+
+        public ListaCompra(
+            string producto,
+            decimal cantidad,
+            string unidadMedida,
+            bool comprado)
+        {
+            Producto = producto;
+            Cantidad = cantidad;
+            UnidadMedida = unidadMedida;
+            Comprado = comprado;
+        }
     }
 }

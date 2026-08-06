@@ -11,5 +11,19 @@ namespace Dominio.Entidades
         public DateTime FechaFin { get; set; }
 
         public ICollection<Comida> Comidas { get; set; } = new List<Comida>();
+
+        public MenuSemanal()
+        {
+        }
+
+        public MenuSemanal(
+            string nombre,
+            DateTime fechaInicio,
+            DateTime fechaFin)
+        {
+            Nombre = nombre;
+            FechaInicio = fechaInicio;
+            FechaFin = fechaFin;
+        }
     }
 }

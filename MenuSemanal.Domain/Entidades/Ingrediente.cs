@@ -13,5 +13,21 @@ namespace Dominio.Entidades
         public int ComidaId { get; set; }
 
         public Comida? Comida { get; set; }
+
+        public Ingrediente()
+        {
+        }
+
+        public Ingrediente(
+            string nombre,
+            decimal cantidad,
+            string unidadMedida,
+            int comidaId)
+        {
+            Nombre = nombre;
+            Cantidad = cantidad;
+            UnidadMedida = unidadMedida;
+            ComidaId = comidaId;
+        }
     }
 }

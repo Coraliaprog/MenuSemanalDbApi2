@@ -12,6 +12,21 @@ namespace Dominio.Entidades
 
         public MenuSemanal? MenuSemanal { get; set; }
 
-        public ICollection<Ingrediente> Ingredientes { get; set; } = new List<Ingrediente>();
+        public ICollection<Ingrediente> Ingredientes { get; set; }
+            = new List<Ingrediente>();
+
+        public Comida()
+        {
+        }
+
+        public Comida(
+            string nombre,
+            string descripcion,
+            int menuSemanalId)
+        {
+            Nombre = nombre;
+            Descripcion = descripcion;
+            MenuSemanalId = menuSemanalId;
+        }
     }
 }
