@@ -1,0 +1,157 @@
+﻿/* ===== PÁGINA DE INICIO ===== */
+
+h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-top: 25px;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #198754, #20c997);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+    h1::before {
+        content: "🍽️ ";
+        -webkit-text-fill-color: initial;
+    }
+
+p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    max-width: 650px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+}
+
+
+/* ===== CONTENEDOR DE TARJETAS ===== */
+
+.row {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+
+/* ===== COLUMNAS ===== */
+
+.col-md-3 {
+    width: 330px;
+    flex: none;
+}
+
+
+/* ===== TARJETAS ===== */
+
+.card {
+    position: relative;
+    min-height: 230px;
+    border: none;
+    border-radius: 22px;
+    overflow: hidden;
+    background: linear-gradient( 145deg, #ffffff 0%, #f4fff9 100% );
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+    /* Línea verde superior */
+
+    .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient( 90deg, #198754, #20c997 );
+    }
+
+
+    /* EFECTO AL PASAR EL MOUSE */
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 18px 40px rgba(25, 135, 84, 0.18);
+    }
+
+
+/* ===== CONTENIDO ===== */
+
+.card-body {
+    padding: 35px 30px;
+}
+
+
+/* ===== ICONOS ===== */
+
+.card:first-child h4::before {
+    content: "📅";
+    display: block;
+    font-size: 38px;
+    margin-bottom: 20px;
+}
+
+.col-md-3:nth-child(2) h4::before {
+    content: "🍲";
+    display: block;
+    font-size: 38px;
+    margin-bottom: 20px;
+}
+
+
+/* ===== TÍTULOS ===== */
+
+.card h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 25px;
+}
+
+
+/* ===== BOTONES ===== */
+
+.btn-success {
+    background: linear-gradient( 135deg, #198754, #20a76b );
+    border: none;
+    padding: 11px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(25, 135, 84, 0.25);
+    transition: all 0.25s ease;
+}
+
+
+    /* EFECTO BOTÓN */
+
+    .btn-success:hover {
+        background: linear-gradient( 135deg, #157347, #198754 );
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(25, 135, 84, 0.35);
+    }
+
+
+    /* Flechita sin modificar el Razor */
+
+    .btn-success::after {
+        content: "  →";
+    }
+
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+    .row {
+        flex-direction: column;
+    }
+
+    .col-md-3 {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2.3rem;
+    }
+}
