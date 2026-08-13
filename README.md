@@ -1,10 +1,10 @@
-# PlanificaPro
+PlanificaPro
 
 PlanificaPro es un sistema de gestión de menús semanales creado para organizar comidas, ingredientes y productos de compra.
 
 El proyecto fue desarrollado utilizando C#, ASP.NET Core, Blazor, Entity Framework Core y SQL Server.
 
-## Funcionalidades
+Funcionalidades
 
 El sistema permite:
 
@@ -15,7 +15,7 @@ El sistema permite:
 - Marcar productos como comprados.
 - Guardar la información en una base de datos.
 
-## Estructura del proyecto
+Estructura del proyecto
 
 El Backend está separado en diferentes capas:
 
@@ -28,7 +28,7 @@ También se encuentra:
 
 - **MenuSemanal.Frontend:** contiene la interfaz de usuario desarrollada con Blazor.
 
-## Arquitectura
+Arquitectura
 
 El proyecto utiliza una arquitectura distribuida.
 
@@ -38,33 +38,33 @@ De manera sencilla, el funcionamiento es:
 
 Frontend Blazor → API → Base de Datos SQL Server
 
-## Entidades principales
+Entidades principales
 
 El sistema trabaja principalmente con las siguientes entidades:
 
-### MenuSemanal
+MenuSemanal
 
 Permite registrar el nombre del menú, la fecha de inicio y la fecha de fin.
 
-### Comida
+Comida
 
 Permite registrar las comidas y asociarlas a un menú semanal.
 
-### Ingrediente
+Ingrediente
 
 Permite registrar el nombre, cantidad y unidad de medida de los ingredientes y asociarlos a una comida.
 
-### ListaCompra
+ListaCompra
 
 Permite registrar productos, cantidades, unidades de medida y especificar si el producto ya fue comprado.
 
-## Base de datos
+Base de datos
 
 El proyecto utiliza SQL Server como base de datos y Entity Framework Core para realizar el acceso a los datos.
 
 Los registros creados desde el Frontend son enviados a la API y almacenados en la base de datos.
 
-## API
+API
 
 La API permite realizar las operaciones CRUD principales:
 
@@ -75,7 +75,7 @@ La API permite realizar las operaciones CRUD principales:
 
 Los endpoints también pueden ser probados utilizando Swagger.
 
-## Tecnologías utilizadas
+Tecnologías utilizadas
 
 - C#
 - .NET
@@ -87,6 +87,6 @@ Los endpoints también pueden ser probados utilizando Swagger.
 - Git y GitHub
 - Visual Studio
 
-## Objetivo
+Objetivo
 
 El objetivo de PlanificaPro es facilitar la organización de la alimentación semanal mediante un sistema que permita administrar menús, comidas, ingredientes y productos de compra.
